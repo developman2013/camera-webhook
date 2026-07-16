@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version without v prefix
+        required: true
+        default: 1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $version = if ('${{ github.ref_type }}' -eq 'tag') { '${{ github.ref_name }}'.TrimStart('v') } else { '${{ inputs.version }}' }
+          "value=$version" >> $env:GITHUB_OUTPUT
+      - run: dotnet restore CameraWebhook.sln
+      - run: dotnet test CameraWebhook.sln --configuration Release --no-restore
+      - name: Publish self-contained application
+        run: dotnet publish src/CameraWebhook/CameraWebhook.csproj --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true -p:Version=${{ steps.version.outputs.value }} --output artifacts/publish
+      - name: Build per-user installer
+        shell: pwsh
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DMyAppVersion=${{ steps.version.outputs.value }}" "/DPublishDir=$pwd\artifacts\publish" installer\CameraWebhook.iss'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CameraWebhook-Setup-${{ steps.version.outputs.value }}
+          path: artifacts/installer/*.exe
+      - uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: artifacts/installer/*.exe
+          generate_release_notes: true
+

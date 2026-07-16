@@ -1,0 +1,71 @@
+<Window x:Class="CameraWebhook.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Camera Webhook — настройки" Height="650" Width="760"
+        MinHeight="580" MinWidth="680" WindowStartupLocation="CenterScreen">
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Открыть файл конфигурации" Click="OpenConfig_Click" Padding="14,7" Margin="0,0,8,0" />
+            <Button Content="Сохранить" Click="Save_Click" IsDefault="True" Padding="22,7" />
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+            <TextBlock Text="Camera Webhook" FontSize="24" FontWeight="SemiBold" />
+            <TextBlock Text="REST-запросы при изменении общего состояния камеры" Foreground="DimGray" Margin="0,3,0,12" />
+            <CheckBox x:Name="StartWithWindows" Content="Запускать при входе в Windows" />
+            <TextBlock Text="Переменные: {{event}}, {{timestamp}}, {{machine}}" Foreground="DimGray" Margin="0,8,0,0" />
+        </StackPanel>
+
+        <TabControl>
+            <TabItem Header="Камера включена">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="14">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <CheckBox x:Name="OnEnabled" Grid.Row="0" Content="Выполнять запрос" Margin="0,0,0,12" />
+                        <TextBlock Grid.Row="1" Text="URL" />
+                        <TextBox x:Name="OnUrl" Grid.Row="2" Margin="0,4,0,10" />
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                            <TextBlock Text="Метод" Width="100" VerticalAlignment="Center" />
+                            <ComboBox x:Name="OnMethod" Width="120" IsEditable="True">
+                                <ComboBoxItem Content="POST"/><ComboBoxItem Content="PUT"/><ComboBoxItem Content="PATCH"/><ComboBoxItem Content="GET"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <TextBlock Grid.Row="4" Text="Заголовки (JSON-объект)" Margin="0,12,0,4" />
+                        <TextBox x:Name="OnHeaders" Grid.Row="5" Height="60" AcceptsReturn="True" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" />
+                        <TextBlock Grid.Row="6" Text="Тело запроса" Margin="0,12,0,4" />
+                        <TextBox x:Name="OnBody" Grid.Row="7" MinHeight="150" AcceptsReturn="True" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" />
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Камера выключена">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="14">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <CheckBox x:Name="OffEnabled" Grid.Row="0" Content="Выполнять запрос" Margin="0,0,0,12" />
+                        <TextBlock Grid.Row="1" Text="URL" />
+                        <TextBox x:Name="OffUrl" Grid.Row="2" Margin="0,4,0,10" />
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                            <TextBlock Text="Метод" Width="100" VerticalAlignment="Center" />
+                            <ComboBox x:Name="OffMethod" Width="120" IsEditable="True">
+                                <ComboBoxItem Content="POST"/><ComboBoxItem Content="PUT"/><ComboBoxItem Content="PATCH"/><ComboBoxItem Content="GET"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <TextBlock Grid.Row="4" Text="Заголовки (JSON-объект)" Margin="0,12,0,4" />
+                        <TextBox x:Name="OffHeaders" Grid.Row="5" Height="60" AcceptsReturn="True" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" />
+                        <TextBlock Grid.Row="6" Text="Тело запроса" Margin="0,12,0,4" />
+                        <TextBox x:Name="OffBody" Grid.Row="7" MinHeight="150" AcceptsReturn="True" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" />
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
+
